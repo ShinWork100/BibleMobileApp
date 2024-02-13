@@ -1,3 +1,6 @@
+// if color rgb is light just choose the light
+// if color is dark theme choose dark mode color 
+
 import React, {useState, useEffect} from 'react';
 import {
   Modal,
@@ -10,6 +13,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {koreanBibleBooks, koreanLongBibleBooks} from './koreanBible';
+import {useTheme} from '../Theme/ThemeContext';
 
 const SelectionModal = ({
   visible,
@@ -21,6 +25,8 @@ const SelectionModal = ({
 }) => {
   const [selectedBook, setSelectedBook] = useState(null);
   const [selectedChapter, setSelectedChapter] = useState(null);
+  const {theme} = useTheme(); // Use the theme
+  const styles = getStyles(theme); // Use the theme for styles
 
   const handleBookSelect = book => {
     // Check if the same book is selected
@@ -115,59 +121,58 @@ const SelectionModal = ({
     </Modal>
   );
 };
-
-const styles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-  },
-  modalContent: {
-    width: '80%',
-    maxHeight: '90%',
-    backgroundColor: 'white',
-    borderRadius: 2,
-    shadowColor: '#000',
-    // ...other styling for modalContent
-  },
-  modalView: {
-    padding: 10,
-    alignItems: 'stretch',
-  },
-  closeButton: {
-    alignSelf: 'flex-end',
-    padding: 10,
-    // You can adjust padding for better touch area
-  },
-  book: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-  },
-  chapterList: {
-    justifyContent: 'center',
-    alignItems: 'flex-start',
-  },
-  chapter: {
-    width: '18%', // Adjust this width based on your UI requirement
-    padding: 5,
-    margin: '1%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    backgroundColor: '#f9f9f9',
-  },
-  itemText: {
-    fontSize: 16,
-    color: '#333',
-  },
-  // ... add any other styles you might have ...
-});
+const getStyles = theme =>
+  StyleSheet.create({
+    centeredView: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0,0,0,0.5)',
+    },
+    modalContent: {
+      width: '80%',
+      maxHeight: '90%',
+      backgroundColor: 'white',
+      borderRadius: 2,
+      shadowColor: '#000',
+      // ...other styling for modalContent
+    },
+    modalView: {
+      padding: 10,
+      alignItems: 'stretch',
+    },
+    closeButton: {
+      alignSelf: 'flex-end',
+      padding: 10,
+      // You can adjust padding for better touch area
+    },
+    book: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingVertical: 10,
+      borderBottomWidth: 1,
+      borderBottomColor: '#ccc',
+    },
+    chapterList: {
+      justifyContent: 'center',
+      alignItems: 'flex-start',
+    },
+    chapter: {
+      width: '18%', // Adjust this width based on your UI requirement
+      padding: 5,
+      margin: '1%',
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderWidth: 1,
+      borderColor: '#ccc',
+      borderRadius: 5,
+      backgroundColor: '#f9f9f9',
+    },
+    itemText: {
+      fontSize: 16,
+      color: theme.textColor, // Use theme for text color
+    },
+  });
 
 export default SelectionModal;

@@ -1,22 +1,25 @@
+// SelectButton.js
 import React from 'react';
 import {TouchableOpacity, Text, StyleSheet} from 'react-native';
 
-const SelectButton = ({onPress, title}) => (
-  <TouchableOpacity onPress={onPress} style={styles.button}>
-    <Text style={styles.buttonText}>{title}</Text>
-  </TouchableOpacity>
-);
+const SelectButton = ({title, onPress}) => {
+  return (
+    <TouchableOpacity onPress={onPress} style={styles.button}>
+      <Text style={styles.text}>{title}</Text>
+    </TouchableOpacity>
+  );
+};
 
 const styles = StyleSheet.create({
   button: {
-    padding: 10,
-    backgroundColor: 'skyblue',
+    backgroundColor: '#4e9af1', // Example color
+    paddingVertical: 8, // Reduced padding
+    paddingHorizontal: 12, // Reduced padding
     borderRadius: 5,
-    alignSelf: 'flex-end',
-    marginRight: 10,
-    marginTop: 10,
+    // margin: 10, // Adjust as needed
+    alignItems: 'center',
   },
-  buttonText: {
+  text: {
     color: 'white',
     fontSize: 16,
   },

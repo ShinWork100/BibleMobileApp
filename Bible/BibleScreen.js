@@ -13,6 +13,7 @@ import {
 import {TouchableOpacity} from 'react-native';
 import {useBibleVersion} from '../Setting/BibleVersionContext';
 import englishBibleBooks from './englishBible';
+import {useTheme} from '../Theme/ThemeContext';
 
 function BibleScreen({route, navigation}) {
   const [chapterData, setChapterData] = useState([]);
@@ -23,6 +24,9 @@ function BibleScreen({route, navigation}) {
   const [currentChapters, setCurrentChapters] = useState(
     Array.from({length: koreanBibleBooks['창'].chapters}, (_, i) => i + 1),
   );
+  const {theme} = useTheme(); // Use the theme
+  const styles = getStyles(theme);
+
   const scrollViewRef = useRef(null);
   const [navigatedFromSearch, setNavigatedFromSearch] = useState(false);
   const {bibleVersion} = useBibleVersion(); // Access the selected Bible version
@@ -353,7 +357,7 @@ function BibleScreen({route, navigation}) {
 
   return (
     <GestureHandlerRootView
-      style={{flex: 1}}
+      style={{flex: 1, backgroundColor: theme.backgroundColor}}
       onTouchStart={onUserInteraction}
       key={bibleVersion}>
       <PanGestureHandler
@@ -374,7 +378,11 @@ function BibleScreen({route, navigation}) {
             onScroll={onScroll}
             scrollEventThrottle={16} // Add this line
           >
-            <Text style={styles.screenTitle}>
+            <Text
+              style={[
+                styles.screenTitle,
+                {color: theme.textColor, fontSize: theme.fontSize},
+              ]}>
               {bibleConfig.books[bookName]?.name || 'Unknown Book'} Chapter{' '}
               {currentChapter}
             </Text>
@@ -386,6 +394,7 @@ function BibleScreen({route, navigation}) {
                   highlightedVerse === verse.verse_number
                     ? styles.highlightedVerse
                     : null,
+                  {color: theme.textColor, fontSize: theme.fontSize},
                 ]}>
                 {verse.verse_number}. {verse.text}
               </Text>
@@ -413,50 +422,51 @@ function BibleScreen({route, navigation}) {
   );
 }
 
-const styles = StyleSheet.create({
-  outerContainer: {
-    flex: 1,
-    position: 'relative',
-  },
-  container: {
-    flex: 1,
-  },
-  content: {
-    flexGrow: 1,
-    padding: 10,
-  },
-  screenTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginVertical: 20,
-  },
-  verse: {
-    fontSize: 16,
-    marginBottom: 10,
-  },
+const getStyles = theme =>
+  StyleSheet.create({
+    outerContainer: {
+      flex: 1,
+      position: 'relative',
+    },
+    container: {
+      flex: 1,
+    },
+    content: {
+      flexGrow: 1,
+      padding: 10,
+    },
+    screenTitle: {
+      fontSize: 22,
+      fontWeight: 'bold',
+      textAlign: 'center',
+      marginVertical: 20,
+    },
+    verse: {
+      fontSize: 16,
+      marginBottom: 10,
+    },
 
-  arrowButton: {
-    position: 'absolute',
-    top: '50%',
-    marginTop: -20, // Adjust this based on the height of your button
-    width: 40,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    borderRadius: 20,
-    zIndex: 10,
-  },
-  leftArrow: {
-    left: 10,
-  },
-  rightArrow: {
-    right: 10,
-  },
-  highlightedVerse: {
-    backgroundColor: 'yellow', // Or any other highlight style
-  },
-});
+    arrowButton: {
+      position: 'absolute',
+      top: '50%',
+      marginTop: -20, // Adjust this based on the height of your button
+      width: 40,
+      height: 40,
+      justifyContent: 'center',
+      alignItems: 'center',
+      // backgroundColor: `${theme.backgroundColor}`,
+      borderRadius: 20,
+      zIndex: 10,
+    },
+    leftArrow: {
+      left: 10,
+    },
+    rightArrow: {
+      right: 10,
+    },
+    highlightedVerse: {
+      backgroundColor: 'yellow', // Or any other highlight style
+    },
+  });
 
 export default BibleScreen;

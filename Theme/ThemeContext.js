@@ -1,21 +1,34 @@
-import React, {createContext, useContext, useState} from 'react';
+import React, {createContext, useContext, useState, useEffect} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Define the initial theme
 const initialTheme = {
   backgroundColor: 'white',
   textColor: 'black',
+  fontSize: 14,
 };
 
-// Create a context for the theme
 const ThemeContext = createContext();
 
-// Create a provider component
 export const ThemeProvider = ({children}) => {
   const [theme, setTheme] = useState(initialTheme);
 
+  useEffect(() => {
+    // Load the theme from storage when the app starts
+    const loadTheme = async () => {
+      const storedTheme = await AsyncStorage.getItem('theme');
+      if (storedTheme) {
+        setTheme(JSON.parse(storedTheme));
+      }
+    };
+
+    loadTheme();
+  }, []);
+
   // Function to update the theme
-  const updateTheme = newTheme => {
-    setTheme(newTheme);
+  const updateTheme = async newTheme => {
+    const updatedTheme = {...theme, ...newTheme};
+    setTheme(updatedTheme);
+    await AsyncStorage.setItem('theme', JSON.stringify(updatedTheme));
   };
 
   return (
@@ -25,7 +38,6 @@ export const ThemeProvider = ({children}) => {
   );
 };
 
-// Create a hook to use the theme throughout the app
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) {
